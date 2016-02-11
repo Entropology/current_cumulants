@@ -12,16 +12,16 @@ import time
 
 ### Get the state space (as a set) from a given model.
 def getStateSpace(model):
-    return(set(map(int,array(model.keys()).flatten())))
+    return(set(map(int,array(list(model.keys())).flatten())))
 
 ### Check a model for dynamical reversibility, i.e. whether
 ### for every forward transition, there is a backward transition
 def isReversible(model):
     ### First transform the edge list into a set of sets,
     ### collapsing edges and their reverse
-    uniquetransitions=set(map(frozenset,model.keys()))
+    uniquetransitions=set(map(frozenset,list(model.keys())))
     ### The above is a random choice for forward
-    forwtransitions=map(list,list(uniquetransitions))
+    forwtransitions=list(map(list,list(uniquetransitions)))
     ### Initiate the backward transitions as a deep copy of the forward
     backtransitions=deepcopy(forwtransitions)
     ### revert backward edges
@@ -29,7 +29,7 @@ def isReversible(model):
         edge.reverse()
     ### transform back to list of tuples and concatenate
     transitions = list(map(tuple,forwtransitions))
-    transitions.extend(map(tuple,backtransitions))
+    transitions.extend(list(map(tuple,backtransitions)))
     ### check whether reconstructed transitions and
     ### the model keys agree (as sets)
     return(set(transitions) == set(model.keys()))
@@ -53,16 +53,16 @@ def isConsistent(model,chords):
         return(False)
 
     ### Check whether the model has an even number of transitions.
-    if( len(model.keys()) % 2 != 0 ):
+    if( len(list(model.keys())) % 2 != 0 ):
         print(" ERROR:  Given models has an odd number of transition rates.")
         print(" ERROR:  Is it dynamically reversible?")
         return(False)
 
     ### Assert that len(chords) == len(model.keys)/2 - N + 1
-    if( len(chords) > len(model.keys())/2 - N + 1 ):
+    if( len(chords) > len(list(model.keys()))/2 - N + 1 ):
         print(" ERROR:  Given number of chords is too large.")
         return(False)
-    if( len(chords) < len(model.keys())/2 - N + 1 ):
+    if( len(chords) < len(list(model.keys()))/2 - N + 1 ):
         print(" ERROR:  Given number of chords is too small.")
         return(False)
 
@@ -73,7 +73,7 @@ def isConsistent(model,chords):
         return(False)
 
     ### Assert that chords are a subset of model.keys
-    if( not set(chords).issubset(model.keys()) ):
+    if( not set(chords).issubset(list(model.keys())) ):
         print(" ERROR:  Given set of chords is not contained in given model.  ")
         return(False)
 
@@ -134,7 +134,7 @@ def getCumulants(model, chords, param=[], simp=[], unsimp=[]):
     #display(Wq)
     
     ### Find coefficients of characteristic polynomial
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print(("--- %s seconds ---" % (time.time() - start_time)))
     print("Start calculating characteristic polynomial")
     a = simplify(Wq.berkowitz()[-1][::-1])  # symbolic simplification is *crucial* here!
         
@@ -143,7 +143,7 @@ def getCumulants(model, chords, param=[], simp=[], unsimp=[]):
     C = zeros(B,B)
     
     ### Calculate current vector
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print(("--- %s seconds ---" % (time.time() - start_time)))
     print("Start calculating current vector")
     for i in range(B):
         c[i] = -(diff(a[0],q[i])/a[1]).ratsimp() ## populate current vector
@@ -154,12 +154,12 @@ def getCumulants(model, chords, param=[], simp=[], unsimp=[]):
     if(doSimplify):
         c = c.subs(param)
         
-        print("--- %s seconds ---" % (time.time() - start_time))
+        print(("--- %s seconds ---" % (time.time() - start_time)))
         print("Start simplifying current vector")
         c = simplify(c.subs(simp)) #simplify cancel
     
     ### Calculate co-variance matrix
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print(("--- %s seconds ---" % (time.time() - start_time)))
     print("Start calculating covariance matrix")
     
     ### Do in-place parametrization, before simplification, if latter is demanded
@@ -194,7 +194,7 @@ def getCumulants(model, chords, param=[], simp=[], unsimp=[]):
     ### simplification of covariance is possibly very time consuming
     C = C.subs(param)
     if(doSimplify):
-        print("--- %s seconds ---" % (time.time() - start_time))
+        print(("--- %s seconds ---" % (time.time() - start_time)))
         print("Start simplifying covariance matrix")
         C = simplify(C)
     
@@ -203,7 +203,7 @@ def getCumulants(model, chords, param=[], simp=[], unsimp=[]):
         C = C.subs(q[i],0)    
 
     
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print(("--- %s seconds ---" % (time.time() - start_time)))
     print("All Done")
     
     ### Symmetrize covariance matrix:
