@@ -134,7 +134,7 @@ def getCumulants(model, chords, param=[], simp=[], unsimp=[]):
     #display(Wq)
     
     ### Find coefficients of characteristic polynomial
-    print(("--- %s seconds ---" % (time.time() - start_time)))
+    print("--- %s seconds ---" % (time.time() - start_time))
     print("Start calculating characteristic polynomial")
     a = simplify(Wq.berkowitz()[-1][::-1])  # symbolic simplification is *crucial* here!
         
@@ -143,7 +143,7 @@ def getCumulants(model, chords, param=[], simp=[], unsimp=[]):
     C = zeros(B,B)
     
     ### Calculate current vector
-    print(("--- %s seconds ---" % (time.time() - start_time)))
+    print("--- %s seconds ---" % (time.time() - start_time))
     print("Start calculating current vector")
     for i in range(B):
         c[i] = -(diff(a[0],q[i])/a[1]).ratsimp() ## populate current vector
@@ -154,12 +154,12 @@ def getCumulants(model, chords, param=[], simp=[], unsimp=[]):
     if(doSimplify):
         c = c.subs(param)
         
-        print(("--- %s seconds ---" % (time.time() - start_time)))
+        print("--- %s seconds ---" % (time.time() - start_time))
         print("Start simplifying current vector")
         c = simplify(c.subs(simp)) #simplify cancel
     
     ### Calculate co-variance matrix
-    print(("--- %s seconds ---" % (time.time() - start_time)))
+    print("--- %s seconds ---" % (time.time() - start_time))
     print("Start calculating covariance matrix")
     
     ### Do in-place parametrization, before simplification, if latter is demanded
@@ -194,7 +194,7 @@ def getCumulants(model, chords, param=[], simp=[], unsimp=[]):
     ### simplification of covariance is possibly very time consuming
     C = C.subs(param)
     if(doSimplify):
-        print(("--- %s seconds ---" % (time.time() - start_time)))
+        print("--- %s seconds ---" % (time.time() - start_time))
         print("Start simplifying covariance matrix")
         C = simplify(C)
     
@@ -203,7 +203,7 @@ def getCumulants(model, chords, param=[], simp=[], unsimp=[]):
         C = C.subs(q[i],0)    
 
     
-    print(("--- %s seconds ---" % (time.time() - start_time)))
+    print("--- %s seconds ---" % (time.time() - start_time))
     print("All Done")
     
     ### Symmetrize covariance matrix:
